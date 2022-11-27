@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300&family=Jost:wght@300&family=Kanit:wght@100&display=swap" rel="stylesheet">
+        <script src="https://cdn.tailwindcss.com"></script>
+        <script>
+            tailwind.config = {
+              theme: {
+                extend: {
+                    backgroundImage: {
+                    'satu' : "url('/build/satu.png')",
+                  },
+                    fontFamily: {
+                        inter:"'Inter', sans-serif",
+                        jost:"'Jost', sans-serif",
+                        kanit:"'Kanit', sans-serif;"
+                    },
+                    colors: {
+                        'coklat': 'rgba(119, 85, 85, 1)',
+                        'biru' : 'rgba(154, 176, 232, 1)'
+                    },
+                }
+              }
+            }
+          </script>
+        
+        <title>lembar 0</title>
+    </head>
+<body>
+    <!-- component -->
+<div class="w-full h-screen flex">
+    <div class="bg-white flex flex-col justify-center items-center w-5/12 shadow-lg">
+      <h1 class="text-3xl font-bold">CREATE ACCOUNT
+
+        
+      </h1>
+      <hr class="py-1">
+      <P class="">Lorem ipsum, ipsa! Eaque dicta itaque, aperiam</P>
+
+      <div class="w-1/2 text-center py-32">
+        <input type="text" name="username" placeholder="username" autocomplete="off"
+            class="shadow-md border w-full h-10 px-3 py-2 text-blue-500 focus:outline-none focus:border-blue-500 mb-3 rounded">
+        <input type="text" name="Email" placeholder="Email" autocomplete="off"
+            class="shadow-md border w-full h-10 px-3 py-2 text-blue-500 focus:outline-none focus:border-blue-500 mb-3 rounded">
+        <input type="password" name="password" placeholder="password" autocomplete="off"
+            class="shadow-md border w-full h-10 px-3 py-2 text-blue-500 focus:outline-none focus:border-blue-500 mb-5 rounded">
+        <button class="bg-blue-400 hover:bg-blue-600 text-white px-10 py-2 rounded text-lg focus:outline-none shadow" >
+
+            <a href="signin.html">Masuk</a>
+        </button>
+      </div>
+    </div>
+    <img src="build/Rectangle 92.png" alt="background" class="object-cover object-center h-screen w-7/12">
+
+
+  </div>
+    
+</body>
+</html>

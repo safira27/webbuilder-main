@@ -1,0 +1,721 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300&family=Jost:wght@300&family=Kanit:wght@100&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@200&family=Italiana&family=Jaldi&family=Jost:wght@700&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/gh/alpinejs/alpine@v2.7.3/dist/alpine.min.js" defer></script>
+
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+              backgroundImage: {
+                  'satu' : "url('/build/satu.png')",
+                  'banner':"url('/image/banner.png')",
+                  'katalog':"url('/image/review.png')",
+                  'footer':"url('/image/footer.png')"
+              },
+              fontFamily: {
+                  inter:"'Inter', sans-serif",
+                  jost:"'Jost', sans-serif",
+                  kanit:"'Kanit', sans-serif;",
+                  italiana:"'Italiana',serif",
+                  jaldi:"'Jaldi',sans-serif",
+                  kaisei:"'Kaisei Tokumin', serif",
+                  jost:"'Jost',sans-serif"
+              },
+              colors: {
+                  'coklat': 'rgba(119, 85, 85, 1)',
+                  'coklat2': 'rgba(78, 46, 20, 1)',
+                  'satu': 'rgba(214, 151, 151, 1)',
+                  'dua': 'rgba(215, 99, 99, 1)',
+                  'tiga': 'rgba(227, 143, 81, 1)',
+                  'kuning': 'rgba(232, 215, 68, 1)',
+                  'cream': 'rgba(243, 240, 210, 1)',
+                  'biru' : 'rgba(154, 176, 232, 1)'
+              },
+              width: {
+                  '128': '32rem',
+              }
+          }
+        }
+      }
+    </script>
+    <title>Lembar2</title>
+</head>
+<body>
+ 
+    <!--Side bar-->
+    <!-- component -->
+<div x-data="setup()" x-init="$refs.loading.classList.add('hidden');" @resize.window="watchScreen()">
+  <div class="flex relative h-screen antialiased text-gray-900 bg-gray-100 dark:bg-dark dark:text-light">
+    <!-- Loading screen -->
+    <div
+      x-ref="loading"
+      class="fixed inset-0 z-50 flex items-center justify-center text-2xl font-semibold text-white bg-biru"
+    >
+      Tunggu Sebentar.....
+    </div>
+
+    <!-- Sidebar -->
+    <div class="flex flex-shrink-0 transition-all">
+      <div
+        x-show="isSidebarOpen"
+        @click="isSidebarOpen = false"
+        class="fixed inset-0 z-10 bg-black bg-opacity-50 lg:hidden"
+      ></div>
+      <div x-show="isSidebarOpen" class="fixed inset-y-0 z-10 w-16 bg-white"></div>
+
+      <!-- Mobile bottom bar 
+      <nav
+        aria-label="Options"
+        class="fixed inset-x-0 bottom-0 flex flex-row-reverse items-center justify-between px-4 py-2 bg-white border-t border-indigo-100 sm:hidden shadow-t rounded-t-3xl">
+        
+        <button
+          @click="(isSidebarOpen && currentSidebarTab == 'linksTab') ? isSidebarOpen = false : isSidebarOpen = true; currentSidebarTab = 'linksTab'"
+          class="p-2 transition-colors rounded-lg shadow-md hover:bg-biru hover:text-white focus:outline-none focus:ring focus:ring-indigo-600 focus:ring-offset-white focus:ring-offset-2"
+          :class="(isSidebarOpen && currentSidebarTab == 'linksTab') ? 'text-white bg-biru' : 'text-gray-500 bg-white'"
+        >
+          <span class="sr-only">Toggle sidebar</span>
+          <svg
+            aria-hidden="true"
+            class="w-6 h-6"
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+          >
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h7" />
+          </svg>
+        </button>
+
+        
+        <a href="#">
+          <img
+            class="w-10 h-auto"
+            src="./build/logo.jpeg"
+          />
+        </a>
+
+      
+        <div class="relative flex items-center flex-shrink-0 p-2" x-data="{ isOpen: false }">
+          <button
+            @click="isOpen = !isOpen; $nextTick(() => {isOpen ? $refs.userMenu.focus() : null})"
+            class="transition-opacity rounded-lg opacity-80 hover:opacity-100 focus:outline-none focus:ring focus:ring-indigo-600 focus:ring-offset-white focus:ring-offset-2"
+          >
+            <img
+              class="w-8 h-8 rounded-lg shadow-md"
+              src="https://avatars.githubusercontent.com/u/57622665?s=460&u=8f581f4c4acd4c18c33a87b3e6476112325e8b38&v=4"
+              alt="Ahmed Kamel"
+            />
+            <span class="sr-only">User menu</span>
+          </button>
+          <div
+            x-show="isOpen"
+            @click.away="isOpen = false"
+            @keydown.escape="isOpen = false"
+            x-ref="userMenu"
+            tabindex="-1"
+            class="absolute w-48 py-1 mt-2 origin-bottom-left bg-white rounded-md shadow-lg left-10 bottom-14 focus:outline-none"
+            role="menu"
+            aria-orientation="vertical"
+            aria-label="user menu"
+          >
+            <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" role="menuitem"
+              >Your Profile</a
+            >
+
+            <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" role="menuitem">Settings</a>
+
+            <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" role="menuitem">Sign out</a>
+          </div>
+        </div>
+      </nav>
+          -->
+      <!--cobamobile-->
+      <nav
+      aria-label="Options"
+      class="fixed inset-x-0 bottom-0 flex  justify-evenly px-4 py-2 bg-white border-t border-indigo-100 sm:hidden shadow-t rounded-t-3xl">
+        <div class="flex items-center p-2">
+          <!-- Menu button -->
+          <!--navbar-->
+          <button
+            @click="(isSidebarOpen && currentSidebarTab == 'linksTab') ? isSidebarOpen = false : isSidebarOpen = true; currentSidebarTab = 'linksTab'"
+            class="p-2 mx-3 transition-colors rounded-lg shadow-md hover:bg-biru hover:text-white focus:outline-none focus:ring focus:ring-indigo-600 focus:ring-offset-white focus:ring-offset-2"
+            :class="(isSidebarOpen && currentSidebarTab == 'linksTab') ? 'text-white bg-biru' : 'text-gray-500 bg-white'"
+          >
+            <span class="sr-only">Toggle sidebar</span>
+            <svg
+              aria-hidden="true"
+              class="w-6 h-6"
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h7" />
+            </svg>
+          </button>
+          <!-- header -->
+          <button
+            @click="(isSidebarOpen && currentSidebarTab == 'headerside') ? isSidebarOpen = false : isSidebarOpen = true; currentSidebarTab = 'headerside'"
+            class="p-2 mx-3 transition-colors rounded-lg shadow-md hover:bg-biru hover:text-white focus:outline-none focus:ring focus:ring-indigo-600 focus:ring-offset-white focus:ring-offset-2"
+            :class="(isSidebarOpen && currentSidebarTab == 'headerside') ? 'text-white bg-biru' : 'text-gray-500 bg-white'"
+          >
+            <span class="sr-only">Toggle message panel</span>
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 12l8.954-8.955c.44-.439 1.152-.439 1.591 0L21.75 12M4.5 9.75v10.125c0 .621.504 1.125 1.125 1.125H9.75v-4.875c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21h4.125c.621 0 1.125-.504 1.125-1.125V9.75M8.25 21h8.25" />
+            </svg>
+            
+          </button>
+          <!-- footer -->
+          <button
+            @click="(isSidebarOpen && currentSidebarTab == 'footerside') ? isSidebarOpen = false : isSidebarOpen = true; currentSidebarTab = 'footerside'"
+            class="p-2 mx-3 transition-colors rounded-lg shadow-md hover:bg-biru hover:text-white focus:outline-none focus:ring focus:ring-indigo-600 focus:ring-offset-white focus:ring-offset-2"
+            :class="(isSidebarOpen && currentSidebarTab == 'footerside') ? 'text-white bg-biru' : 'text-gray-500 bg-white'"
+          >
+            <span class="sr-only">Toggle message panel</span>
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-6 h-6">
+              <path fill-rule="evenodd" d="M2.25 6a3 3 0 013-3h13.5a3 3 0 013 3v12a3 3 0 01-3 3H5.25a3 3 0 01-3-3V6zm18 3H3.75v9a1.5 1.5 0 001.5 1.5h13.5a1.5 1.5 0 001.5-1.5V9zm-15-3.75A.75.75 0 004.5 6v.008c0 .414.336.75.75.75h.008a.75.75 0 00.75-.75V6a.75.75 0 00-.75-.75H5.25zm1.5.75a.75.75 0 01.75-.75h.008a.75.75 0 01.75.75v.008a.75.75 0 01-.75.75H7.5a.75.75 0 01-.75-.75V6zm3-.75A.75.75 0 009 6v.008c0 .414.336.75.75.75h.008a.75.75 0 00.75-.75V6a.75.75 0 00-.75-.75H9.75z" clip-rule="evenodd" />
+            </svg>              
+          </button>
+          <!-- save -->
+          <button
+            @click="(isSidebarOpen && currentSidebarTab == 'saveside') ? isSidebarOpen = false : isSidebarOpen = true; currentSidebarTab = 'saveside'"
+            class="p-2 mx-5 transition-colors rounded-lg shadow-md hover:bg-biru hover:text-white focus:outline-none focus:ring focus:ring-indigo-600 focus:ring-offset-white focus:ring-offset-2"
+            :class="(isSidebarOpen && currentSidebarTab == 'saveside') ? 'text-white bg-biru' : 'text-gray-500 bg-white'"
+          >
+            <span class="sr-only">Toggle notifications panel</span>
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-6 h-6">
+              <path fill-rule="evenodd" d="M19.5 21a3 3 0 003-3V9a3 3 0 00-3-3h-5.379a.75.75 0 01-.53-.22L11.47 3.66A2.25 2.25 0 009.879 3H4.5a3 3 0 00-3 3v12a3 3 0 003 3h15zm-6.75-10.5a.75.75 0 00-1.5 0v4.19l-1.72-1.72a.75.75 0 00-1.06 1.06l3 3a.75.75 0 001.06 0l3-3a.75.75 0 10-1.06-1.06l-1.72 1.72V10.5z" clip-rule="evenodd" />
+            </svg>
+            
+          </button>
+        </div>
+      </nav>
+
+      <!-- Left mini bar -->
+      <nav
+        aria-label="Options"
+        class="z-20 flex-col items-center flex-shrink-0 hidden w-16 py-4 bg-white border-r-2 border-indigo-100 shadow-md sm:flex rounded-tr-3xl rounded-br-3xl"
+      >
+        <!-- Logo -->
+        <div class="flex-shrink-0 py-4 ">
+          <a href="#">
+            <img
+              class="w-11 h-auto rounded-lg"
+              src="./build/Rectangle 116.png"
+            />
+          </a>
+        </div>
+        <div class="flex flex-col items-center flex-1 p-2 space-y-4">
+          <!-- Menu button -->
+          <!--navbar-->
+          <button
+            @click="(isSidebarOpen && currentSidebarTab == 'linksTab') ? isSidebarOpen = false : isSidebarOpen = true; currentSidebarTab = 'linksTab'"
+            class="p-2 transition-colors rounded-lg shadow-md hover:bg-biru hover:text-white focus:outline-none focus:ring focus:ring-indigo-600 focus:ring-offset-white focus:ring-offset-2"
+            :class="(isSidebarOpen && currentSidebarTab == 'linksTab') ? 'text-white bg-biru' : 'text-gray-500 bg-white'"
+          >
+            <span class="sr-only">Toggle sidebar</span>
+            <svg
+              aria-hidden="true"
+              class="w-6 h-6"
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h7" />
+            </svg>
+          </button>
+          <!-- header -->
+          <button
+            @click="(isSidebarOpen && currentSidebarTab == 'headerside') ? isSidebarOpen = false : isSidebarOpen = true; currentSidebarTab = 'headerside'"
+            class="p-2 transition-colors rounded-lg shadow-md hover:bg-biru hover:text-white focus:outline-none focus:ring focus:ring-indigo-600 focus:ring-offset-white focus:ring-offset-2"
+            :class="(isSidebarOpen && currentSidebarTab == 'headerside') ? 'text-white bg-biru' : 'text-gray-500 bg-white'"
+          >
+            <span class="sr-only">Toggle message panel</span>
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 12l8.954-8.955c.44-.439 1.152-.439 1.591 0L21.75 12M4.5 9.75v10.125c0 .621.504 1.125 1.125 1.125H9.75v-4.875c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21h4.125c.621 0 1.125-.504 1.125-1.125V9.75M8.25 21h8.25" />
+            </svg>
+            
+          </button>
+          <!-- footer -->
+          <button
+            @click="(isSidebarOpen && currentSidebarTab == 'footerside') ? isSidebarOpen = false : isSidebarOpen = true; currentSidebarTab = 'footerside'"
+            class="p-2 mx-3 transition-colors rounded-lg shadow-md hover:bg-biru hover:text-white focus:outline-none focus:ring focus:ring-indigo-600 focus:ring-offset-white focus:ring-offset-2"
+            :class="(isSidebarOpen && currentSidebarTab == 'footerside') ? 'text-white bg-biru' : 'text-gray-500 bg-white'"
+          >
+            <span class="sr-only">Toggle message panel</span>
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-6 h-6">
+              <path fill-rule="evenodd" d="M2.25 6a3 3 0 013-3h13.5a3 3 0 013 3v12a3 3 0 01-3 3H5.25a3 3 0 01-3-3V6zm18 3H3.75v9a1.5 1.5 0 001.5 1.5h13.5a1.5 1.5 0 001.5-1.5V9zm-15-3.75A.75.75 0 004.5 6v.008c0 .414.336.75.75.75h.008a.75.75 0 00.75-.75V6a.75.75 0 00-.75-.75H5.25zm1.5.75a.75.75 0 01.75-.75h.008a.75.75 0 01.75.75v.008a.75.75 0 01-.75.75H7.5a.75.75 0 01-.75-.75V6zm3-.75A.75.75 0 009 6v.008c0 .414.336.75.75.75h.008a.75.75 0 00.75-.75V6a.75.75 0 00-.75-.75H9.75z" clip-rule="evenodd" />
+            </svg>              
+          </button>
+          <!-- save -->
+          <button
+            @click="(isSidebarOpen && currentSidebarTab == 'saveside') ? isSidebarOpen = false : isSidebarOpen = true; currentSidebarTab = 'saveside'"
+            class="p-2 transition-colors rounded-lg shadow-md hover:bg-biru hover:text-white focus:outline-none focus:ring focus:ring-indigo-600 focus:ring-offset-white focus:ring-offset-2"
+            :class="(isSidebarOpen && currentSidebarTab == 'saveside') ? 'text-white bg-biru' : 'text-gray-500 bg-white'"
+          >
+            <span class="sr-only">Toggle notifications panel</span>
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-6 h-6">
+              <path fill-rule="evenodd" d="M19.5 21a3 3 0 003-3V9a3 3 0 00-3-3h-5.379a.75.75 0 01-.53-.22L11.47 3.66A2.25 2.25 0 009.879 3H4.5a3 3 0 00-3 3v12a3 3 0 003 3h15zm-6.75-10.5a.75.75 0 00-1.5 0v4.19l-1.72-1.72a.75.75 0 00-1.06 1.06l3 3a.75.75 0 001.06 0l3-3a.75.75 0 10-1.06-1.06l-1.72 1.72V10.5z" clip-rule="evenodd" />
+            </svg>
+            
+          </button>
+        </div>
+
+        <!-- User avatar -->
+        <div class="relative flex items-center flex-shrink-0 p-2" x-data="{ isOpen: false }">
+          <button
+            @click="isOpen = !isOpen; $nextTick(() => {isOpen ? $refs.userMenu.focus() : null})"
+            class="transition-opacity rounded-lg opacity-80 hover:opacity-100 focus:outline-none focus:ring focus:ring-indigo-600 focus:ring-offset-white focus:ring-offset-2"
+          >
+            <img
+              class="w-10 h-10 rounded-lg shadow-md"
+              src="build/Rectangle 116.png"
+              alt=""
+            />
+            <span class="sr-only">User menu</span>
+          </button>
+          <div
+            x-show="isOpen"
+            @click.away="isOpen = false"
+            @keydown.escape="isOpen = false"
+            x-ref="userMenu"
+            tabindex="-1"
+            class="absolute w-48 py-1 mt-2 origin-bottom-left bg-white rounded-md shadow-lg left-10 bottom-14 focus:outline-none"
+            role="menu"
+            aria-orientation="vertical"
+            aria-label="user menu"
+          >
+            <a href="index.html" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" role="menuitem"
+              >Home</a
+            >
+
+          </div>
+        </div>
+      </nav>
+
+      <div id="myDiv"
+        x-transition:enter="transform transition-transform duration-300"
+        x-transition:enter-start="-translate-x-full"
+        x-transition:enter-end="translate-x-0"
+        x-transition:leave="transform transition-transform duration-300"
+        x-transition:leave-start="translate-x-0"
+        x-transition:leave-end="-translate-x-full"
+        x-show="isSidebarOpen"
+        class=" inset-y-0 left-0 z-10 flex-shrink-0 w-64 bg-white border-r-2 border-indigo-100 shadow-lg sm:left-16 sm:w-72 lg:static lg:w-[32rem]"
+      >
+      <!--navbar-->
+        <nav x-show="currentSidebarTab == 'linksTab'" aria-label="Main" class="flex flex-col h-full ">
+          <!--Close-->
+          <div class="flex justify-end box-border m-6">
+            <svg class="close w-6 h-6 hover:scale-150 cursor-pointer " onclick="document.getElementById('myDiv').style.display='none'" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+            </svg>
+          </div>
+        
+          <!-- Logo -->
+          <div class="flex m-auto pb-10 ">
+            <!-- <button class="close" onclick="document.getElementById('myDiv').style.display='none'" >Close</button> -->
+            <p class="text-2xl pt-2" >Navbar</p>
+          </div>
+          
+          <!-- Sidebar -->
+          <div class="flex-1 px-4 space-y-2 overflow-hidden hover:overflow-auto  ">
+            <div id="navbar1" class="flex flex-row items-center ">
+              <img  class="transition-colors my-5 rounded-sm cursor-pointer w-5/6 " src="./desainbuider/navbar.png">
+              <svg id="icon1" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="hidden ml-2 w-9 h-9 cursor-pointer  ">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v6m3-3H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z" />
+              </svg>
+            </div>
+            <div id="navbar2" class="flex flex-row items-center">
+              <img  class="transition-colors my-5 rounded-sm cursor-pointer w-5/6 " src="./desainbuider/navbar (1).png">
+
+              <svg id="icon2" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="hidden ml-2 w-9 h-9 cursor-pointer  ">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v6m3-3H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z" />
+              </svg>
+            </div>
+            <div id="navbar3" class="flex flex-row items-center">
+              <img  class="transition-colors my-5 rounded-sm cursor-pointer w-5/6 " src="./desainbuider/navbar (2).png">
+
+              <svg id="icon3" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="hidden ml-2 w-9 h-9 cursor-pointer  ">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v6m3-3H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z" />
+              </svg>
+            </div>
+            <div id="navbar4" class="flex flex-row items-center">
+              <img  class="transition-colors my-5 rounded-sm cursor-pointer w-5/6 " src="./desainbuider/navbar (3).png">
+
+              <svg id="icon4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="hidden ml-2 w-9 h-9 cursor-pointer  ">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v6m3-3H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z" />
+              </svg>
+            </div>
+            <div id="navbar5" class="flex flex-row items-center">
+              <img  class="transition-colors my-5 rounded-sm cursor-pointer w-5/6 " src="./desainbuider/navbar (4).png">
+
+              <svg id="icon5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="hidden ml-2 w-9 h-9 cursor-pointer  ">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v6m3-3H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z" />
+              </svg>
+            </div>
+          </div>
+        </nav>
+        <!--header-->
+        <nav x-show="currentSidebarTab == 'headerside'" class="flex flex-col h-full px-4 py-6">
+          <!--Close-->
+          <div class="flex justify-end box-border m-6">
+            <svg class="close w-6 h-6 hover:scale-150 cursor-pointer " onclick="document.getElementById('myDiv').style.display='none'" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+            </svg>
+          </div>
+          <!-- Logo -->
+          <div class="flex m-auto pb-10 ">
+            <!-- <button class="close" onclick="document.getElementById('myDiv').style.display='none'" >Close</button> -->
+            <p class="text-2xl pt-2" >Banner</p>
+          </div>
+        
+          <div class="flex-1 px-4 space-y-2 overflow-hidden hover:overflow-auto">
+            <div id="banner1" class="flex flex-row items-center">
+              <img  class="transition-colors my-5 rounded-sm cursor-pointer w-5/6 h-28" src="./desainbuider/banner.png">
+              <svg id="icon6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="hidden ml-2 w-9 h-9 cursor-pointer  ">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v6m3-3H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z" />
+              </svg>
+            </div>
+            <div id="banner2" class="flex flex-row items-center">
+              <img  class="transition-colors my-5 rounded-sm cursor-pointer w-5/6 h-28" src="./desainbuider/banner.png">
+              <svg id="icon7" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="hidden ml-2 w-9 h-9 cursor-pointer  ">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v6m3-3H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z" />
+              </svg>
+            </div>
+
+            <img class="transition-colors rounded-lg cursor-pointer " src="./desainbuider/Group 15.png">
+            <img class="transition-colors rounded-lg cursor-pointer " src="./desainbuider/Group 16.png">
+            
+          </div>
+        </nav>
+        <!--footer-->
+        <div x-show="currentSidebarTab == 'footerside'" class="flex flex-col h-full px-4 py-6">
+          <!--Close-->
+          <div class="flex justify-end box-border m-6">
+            <svg class="close w-6 h-6 hover:scale-150 cursor-pointer " onclick="document.getElementById('myDiv').style.display='none'" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+            </svg>
+          </div>
+          <div class="m-auto pb-10">
+            <p class="text-2xl pt-2" >Footer</p>
+          </div>  
+          <div class="flex-1 px-4 space-y-2 overflow-hidden hover:overflow-auto">
+            <img class="transition-colors rounded-lg cursor-pointer " src="./desainbuider/footer.png">
+            <img class="transition-colors rounded-lg cursor-pointer " src="./desainbuider/footer (1).png">
+          </div>
+        </div>
+        <!--Save-->
+        <div x-show="currentSidebarTab == 'saveside'" class="flex flex-col h-full px-4 py-6">
+          <!--Close-->
+          <div class="flex justify-end box-border m-6">
+            <svg class="close w-6 h-6 hover:scale-150 cursor-pointer " onclick="document.getElementById('myDiv').style.display='none'" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+            </svg>
+          </div>
+          <div class="m-auto pb-10">
+            <p class="text-2xl pt-2" >Download</p>
+          </div>  
+          <div class="flex-1 px-4 space-y-2 overflow-hidden hover:overflow-auto">
+            <button class="bg-grey-light hover:bg-grey text-grey-darkest font-bold py-2 px-4 rounded inline-flex items-center">
+              <svg class="w-4 h-4 mr-2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M13 8V2H7v6H2l8 8 8-8h-5zM0 18h20v2H0v-2z"/></svg>
+              <span>Download</span>
+            </button>
+          </div>
+        </div>
+
+      </div>
+    </div>
+    <div class="flex flex-col flex-1">
+      <header class="relative flex items-center justify-between flex-shrink-0 p-4">
+        <form action="#" class="flex-1">
+          <!--  -->
+        </form>
+        <div class="items-center hidden ml-4 sm:flex">
+          <button
+            @click="isSettingsPanelOpen = true"
+            class="p-2 mr-4 text-gray-400 bg-white rounded-lg shadow-md hover:text-gray-600 focus:outline-none focus:ring focus:ring-white focus:ring-offset-gray-100 focus:ring-offset-4"
+          >
+            <span class="sr-only">Settings</span>
+            <svg
+              aria-hidden="true"
+              class="w-6 h-6"
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"
+              />
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
+              />
+            </svg>
+          </button>
+
+          
+        </div>
+      </header>
+
+      <div class="">
+        <!-- Main -->
+        <main id="main" class="flex w-full flex-1 px-4 py-8">
+          <!-- <h1 class="text-5xl font-bold text-gray-500">In progress</h1> -->
+          
+        </main>
+      </div>
+    </div>
+  </div>
+
+  <!-- Panels -->
+
+  <!-- Settings Panel -->
+  <!-- Backdrop -->
+  <div
+    x-show="isSettingsPanelOpen"
+    class=" inset-0 bg-black bg-opacity-50"
+    @click="isSettingsPanelOpen = false"
+    aria-hidden="true"
+  ></div>
+  <!-- Panel -->
+  <section
+    x-transition:enter="transform transition-transform duration-300"
+    x-transition:enter-start="translate-x-full"
+    x-transition:enter-end="translate-x-0"
+    x-transition:leave="transform transition-transform duration-300"
+    x-transition:leave-start="translate-x-0"
+    x-transition:leave-end="translate-x-full"
+    x-show="isSettingsPanelOpen"
+    class="absolute -z-50 inset-y-0 right-0 w-64 bg-white border-l border-indigo-100 rounded-l-3xl"
+  >
+    <div class="px-4 py-8">
+      <h2 class="text-lg font-semibold  ">Settings</h2>
+    </div>
+  </section>
+
+</div>
+
+<script>
+    const setup = () => {
+        return {
+        isSidebarOpen: false,
+        currentSidebarTab: null,
+        isSettingsPanelOpen: false,
+        isSubHeaderOpen: false,
+        watchScreen() {
+            if (window.innerWidth <= 1024) {
+            this.isSidebarOpen = false
+            }
+        },
+    }
+  }
+const navcode1 = `<nav class="bg-gray-300 shadow-lg w-full">
+            <div class=" flex justify-between mx-auto px-4">
+                <div>
+                  <!-- Website Logo -->
+                  <div class="logo">
+                      <img src="./desainbuider/logo.png">
+                  </div>
+              </div>
+              <!-- Primary Navbar items -->
+                <div class="hidden md:flex items-center text-black space-x-1">
+                    <a href="index.html" class="py-4 px-2  font-semibold hover:text-blue-500 transition duration-300">Home</a>
+                    <a href="index2.html" class="py-4 px-2  font-semibold hover:text-blue-500 transition duration-300">Katalog</a>
+                    <a href="index2.html" class="py-4 px-2  font-semibold hover:text-blue-500 transition duration-300">Album</a>
+                    <a href="#" class="py-4 px-2  font-semibold hover:text-blue-500 transition duration-300">Our Storys</a>
+                </div>
+            </div>
+          </nav>`
+  const nav = document.querySelector("div#navbar1")
+  nav.addEventListener("mouseover",(e)=>{
+    // document.querySelector("main#main").innerHTML= navcode1
+    const list = document.querySelector("svg#icon1").classList;
+    list.remove("hidden");
+  })
+  document.querySelector("svg#icon1").addEventListener("click",(e)=>{
+    document.querySelector("main#main").innerHTML = navcode1
+  }) 
+  nav.addEventListener("mouseout",(e)=>{
+    // document.querySelector("main#main").innerHTML= navcod1
+    const list = document.querySelector("svg#icon1").classList;
+    list.add("hidden");
+  })
+
+const navcode2 = `<nav class="bg-white shadow-lg w-full">
+            <div class="flex justify-between mx-auto px-4">
+                <div>
+                  <!-- Website Logo -->
+                  <div class="logo">
+                      <img src="./desainbuider/logo.png">
+                  </div>
+              </div>
+              <!-- Primary Navbar items -->
+                <div class="hidden md:flex items-center text-black space-x-1">
+                    <a href="index.html" class="py-4 px-2  font-semibold hover:text-blue-500 transition duration-300">Home</a>
+                    <a href="index2.html" class="py-4 px-2  font-semibold hover:text-blue-500 transition duration-300">Katalog</a>
+                    <a href="index2.html" class="py-4 px-2  font-semibold hover:text-blue-500 transition duration-300">Album</a>
+                    <a href="#" class="py-4 px-2  font-semibold hover:text-blue-500 transition duration-300">Our Storys</a>
+                </div>
+            </div>
+          </nav>`
+
+    const nav2 = document.querySelector("div#navbar2")
+    nav2.addEventListener("mouseover",(e)=>{
+    // document.querySelector("main#main").innerHTML= navcode1
+    const list = document.querySelector("svg#icon2").classList;
+    list.remove("hidden");
+  })
+  document.querySelector("svg#icon2").addEventListener("click",(e)=>{
+    document.querySelector("main#main").innerHTML = navcode2
+  }) 
+  nav2.addEventListener("mouseout",(e)=>{
+    // document.querySelector("main#main").innerHTML= navcod1
+    const list = document.querySelector("svg#icon2").classList;
+    list.add("hidden");
+  })
+
+  const navcode3 = `<nav class="bg-black shadow-lg w-full">
+            <div class="flex justify-between mx-auto px-4">
+                <div>
+                  <!-- Website Logo -->
+                  <div class="logo">
+                      <img src="./desainbuider/logo.png">
+                  </div>
+              </div>
+              <!-- Primary Navbar items -->
+                <div class="hidden md:flex items-center text-white space-x-1">
+                    <a href="index.html" class="py-4 px-2  font-semibold hover:text-blue-500 transition duration-300">Home</a>
+                    <a href="index2.html" class="py-4 px-2  font-semibold hover:text-blue-500 transition duration-300">Katalog</a>
+                    <a href="index2.html" class="py-4 px-2  font-semibold hover:text-blue-500 transition duration-300">Album</a>
+                    <a href="#" class="py-4 px-2  font-semibold hover:text-blue-500 transition duration-300">Our Storys</a>
+                </div>
+            </div>
+          </nav>`
+
+  const nav3 = document.querySelector("div#navbar3")
+    nav3.addEventListener("mouseover",(e)=>{
+    // document.querySelector("main#main").innerHTML= navcode1
+    const list = document.querySelector("svg#icon3").classList;
+    list.remove("hidden");
+  })
+  document.querySelector("svg#icon3").addEventListener("click",(e)=>{
+    document.querySelector("main#main").innerHTML = navcode3
+  }) 
+  nav3.addEventListener("mouseout",(e)=>{
+    // document.querySelector("main#main").innerHTML= navcod1
+    const list = document.querySelector("svg#icon3").classList;
+    list.add("hidden");
+  })
+
+  const navcode4 = `<nav class="bg-orange-100 shadow-lg w-full">
+            <div class="flex items-center justify-between mx-auto px-4">
+               <div class="flex items-center">
+                <!-- Website Logo -->
+                <div class="logo">
+                  <img src="./desainbuider/logo.png">
+                </div>
+              <!-- Primary Navbar items -->
+                <div class="text-black">
+                    <a href="index.html" class="py-4 px-2  font-semibold hover:text-blue-500 transition duration-300">Home</a>
+                    <a href="index2.html" class="py-4 px-2  font-semibold hover:text-blue-500 transition duration-300">Katalog</a>
+                    <a href="index2.html" class="py-4 px-2  font-semibold hover:text-blue-500 transition duration-300">Album</a>
+                    <a href="#" class="py-4 px-2  font-semibold hover:text-blue-500 transition duration-300">Our Storys</a>
+                </div>
+               </div> 
+              <button class="bg-orange-600 py-2 px-6 rounded-md box-border text-lg" type="submit">Login</button>
+                
+            </div>
+          </nav>`
+          
+  const nav4 = document.querySelector("div#navbar4")
+    nav4.addEventListener("mouseover",(e)=>{
+    // document.querySelector("main#main").innerHTML= navcode1
+    const list = document.querySelector("svg#icon4").classList;
+    list.remove("hidden");
+  })
+  document.querySelector("svg#icon4").addEventListener("click",(e)=>{
+    document.querySelector("main#main").innerHTML = navcode4
+  }) 
+  nav4.addEventListener("mouseout",(e)=>{
+    // document.querySelector("main#main").innerHTML= navcod1
+    const list = document.querySelector("svg#icon4").classList;
+    list.add("hidden");
+  })
+  
+  const navcode5 =`<nav class="bg-white shadow-lg w-full">
+            <div class="flex items-center justify-between mx-auto px-4">
+                <div>
+                  <!-- Website Logo -->
+                  <div class="logo">
+                      <img src="./desainbuider/logo.png">
+                  </div>
+                </div>
+              <!-- Primary Navbar items -->
+                <div class="hidden md:flex items-center text-black space-x-1">
+                    <a href="index.html" class="py-4 px-2  font-semibold hover:text-blue-500 transition duration-300">Home</a>
+                    <a href="index2.html" class="py-4 px-2  font-semibold hover:text-blue-500 transition duration-300">Katalog</a>
+                    <a href="index2.html" class="py-4 px-2  font-semibold hover:text-blue-500 transition duration-300">Album</a>
+                    <a href="#" class="py-4 px-2  font-semibold hover:text-blue-500 transition duration-300">Our Storys</a>
+                    <input class="border-2 border-gray-400 placeholder:text-slate-400 bg-white rounded-md " placeholder="Search for anything..." type="text">
+                </div>
+                
+            </div>
+          </nav>`
+  
+    const nav5 = document.querySelector("div#navbar5")
+    nav5.addEventListener("mouseover",(e)=>{
+    // document.querySelector("main#main").innerHTML= navcode1
+    const list = document.querySelector("svg#icon5").classList;
+    list.remove("hidden");
+    })
+    document.querySelector("svg#icon5").addEventListener("click",(e)=>{
+      document.querySelector("main#main").innerHTML = navcode5
+    }) 
+    nav5.addEventListener("mouseout",(e)=>{
+      // document.querySelector("main#main").innerHTML= navcod1
+      const list = document.querySelector("svg#icon5").classList;
+      list.add("hidden");
+    })
+    
+  const bannercode1 =`<div class="bg-banner text-center bg-cover flex-wrap bg-no-repeat w-full h-screen pt-44">
+            <h1 class="text-7xl font-italiana text-center text-white">WELCOME TO ALBUM DIGITAL</h1>
+            <p class="font-jaldi mx-7 px-6 text-2xl py-3 text-center text-white">Lorem ipsum dolor, sit amet consectetur adipisicing elit. Cupiditate voluptas quod deserunt exercitationem consequuntur delectus minima vero ab explicabo quis!</p>
+            <button type="button" class=" inline-block p-4 cursor-pointer border-2 border-white text-white text-2xl transition-all hover:bg-gray-300 hover:text-black">LETS START</button>
+          </div>`
+
+    const ban1 = document.querySelector("div#banner1")
+    ban1.addEventListener("mouseover",(e)=>{
+    // document.querySelector("main#main").innerHTML= navcode1
+    const list = document.querySelector("svg#icon6").classList;
+    list.remove("hidden");
+    })
+    document.querySelector("svg#icon6").addEventListener("click",(e)=>{
+      document.querySelector("main#main").innerHTML = bannercode1
+    }) 
+    ban1.addEventListener("mouseout",(e)=>{
+      // document.querySelector("main#main").innerHTML= navcod1
+      const list = document.querySelector("svg#icon6").classList;
+      list.add("hidden");
+    })    
+    
+  </script>
+    <!--End-->
+</body>
+</html>
